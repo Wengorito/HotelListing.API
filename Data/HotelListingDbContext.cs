@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace HotelListing.API
+namespace HotelListing.API.Data
 {
     public class HotelListingDbContext : DbContext
     {
@@ -8,5 +8,8 @@ namespace HotelListing.API
         {
 
         }
+
+        public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<Country> Countries { get; set; }
     }
 }

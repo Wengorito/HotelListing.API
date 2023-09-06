@@ -1,4 +1,4 @@
-using HotelListing.API;
+using HotelListing.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
