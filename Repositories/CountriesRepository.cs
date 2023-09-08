@@ -1,8 +1,8 @@
-﻿using HotelListing.API.Data;
-using HotelListing.API.Repositories;
+﻿using HotelListing.API.Contracts;
+using HotelListing.API.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelListing.API.Contracts
+namespace HotelListing.API.Repositories
 {
     public class CountriesRepository : GenericRepository<Country>, ICountriesRepository
     {

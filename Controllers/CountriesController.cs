@@ -25,9 +25,7 @@ namespace HotelListing.API.Controllers
         public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
         {
             var countries = await _countries.GetAllAsync();
-            var records = _mapper.Map<List<GetCountryDto>>(countries);
-
-            return Ok(records);
+            return Ok(_mapper.Map<List<GetCountryDto>>(countries));
         }
 
         // GET: api/Countries/5
@@ -35,10 +33,7 @@ namespace HotelListing.API.Controllers
         public async Task<ActionResult<CountryDto>> GetCountry(int id)
         {
             var country = await _countries.GetDetailsAsync(id);
-
-            var countryDto = _mapper.Map<CountryDto>(country);
-
-            return Ok(countryDto);
+            return Ok(_mapper.Map<CountryDto>(country));
         }
 
         // PUT: api/Countries/5
@@ -82,12 +77,12 @@ namespace HotelListing.API.Controllers
         // POST: api/Countries
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Country>> PostCountry(CreateCountryDto createCountryDto)
+        public async Task<ActionResult<CountryDto>> PostCountry(CreateCountryDto createCountryDto)
         {
             var country = _mapper.Map<Country>(createCountryDto);
 
             await _countries.AddAsync(country);
-
+            // TODO check for return type. No visible differences. CountryDetailDto then?
             return CreatedAtAction("GetCountry", new { id = country.Id }, country);
         }
 
@@ -96,7 +91,6 @@ namespace HotelListing.API.Controllers
         public async Task<IActionResult> DeleteCountry(int id)
         {
             await _countries.DeleteAsync(id);
-
             return NoContent();
         }
     }
