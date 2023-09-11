@@ -1,5 +1,4 @@
-﻿using HotelListing.API.Data;
-using HotelListing.API.Models.User;
+﻿using HotelListing.API.Models.User;
 using Microsoft.AspNetCore.Identity;
 
 namespace HotelListing.API.Contracts
@@ -9,6 +8,7 @@ namespace HotelListing.API.Contracts
         Task<IEnumerable<IdentityError>> RegisterUser(ApiUserDto userDto);
         Task<IEnumerable<IdentityError>> RegisterAdmin(ApiUserDto userDto);
         Task<AuthResponseDto> Login(LoginDto loginDto);
-        Task<string> GenerateToken(ApiUser user);
+        Task<string> CreateaRefreshToken();
+        Task<AuthResponseDto> VerifyRefreshToken(AuthResponseDto request);
     }
 }
