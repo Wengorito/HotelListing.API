@@ -12,11 +12,13 @@ namespace HotelListing.API.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
+        private readonly ILogger<CountriesController> _logger;
         private readonly IMapper _mapper;
         private readonly ICountriesRepository _countries;
 
-        public CountriesController(IMapper mapper, ICountriesRepository countries)
+        public CountriesController(ILogger<CountriesController> logger, IMapper mapper, ICountriesRepository countries)
         {
+            _logger = logger;
             _mapper = mapper;
             _countries = countries;
         }
@@ -34,6 +36,13 @@ namespace HotelListing.API.Controllers
         public async Task<ActionResult<CountryDto>> GetCountry(int id)
         {
             var country = await _countries.GetDetailsAsync(id);
+
+            if (country == null)
+            {
+                _logger.LogWarning($"Record not found in {nameof(GetCountry)} with Id: {id}");
+                return NotFound();
+            }
+
             return Ok(_mapper.Map<CountryDto>(country));
         }
 
@@ -52,6 +61,7 @@ namespace HotelListing.API.Controllers
 
             if (country == null)
             {
+                _logger.LogWarning($"Record not found in {nameof(PutCountry)} with Id: {id}");
                 return NotFound();
             }
 
