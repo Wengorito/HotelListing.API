@@ -78,7 +78,7 @@ namespace HotelListing.API.Repositories
             };
         }
 
-        public async Task<IEnumerable<IdentityError>> Register(ApiUserDto userDto)
+        public async Task<IEnumerable<IdentityError>> RegisterUser(ApiUserDto userDto)
         {
             var user = _mapper.Map<ApiUser>(userDto);
             user.UserName = userDto.Email;
@@ -88,6 +88,21 @@ namespace HotelListing.API.Repositories
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "User");
+            }
+
+            return result.Errors;
+        }
+
+        public async Task<IEnumerable<IdentityError>> RegisterAdmin(ApiUserDto userDto)
+        {
+            var user = _mapper.Map<ApiUser>(userDto);
+            user.UserName = userDto.Email;
+
+            var result = await _userManager.CreateAsync(user, userDto.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "Administrator");
             }
 
             return result.Errors;
