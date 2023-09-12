@@ -2,6 +2,7 @@
 using HotelListing.API.Contracts;
 using HotelListing.API.Data;
 using HotelListing.API.Exceptions;
+using HotelListing.API.Models;
 using HotelListing.API.Models.Hotel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,26 +24,33 @@ namespace HotelListing.API.Controllers
             _hotelsRepository = hotelsRepository;
         }
 
-        // GET: api/Hotels
-        [HttpGet]
+        // GET: api/Hotels/GetAll
+        [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<HotelDto>>> GetHotels()
         {
             var hotels = await _hotelsRepository.GetAllAsync();
             return Ok(_mapper.Map<List<HotelDto>>(hotels));
         }
 
+        // GET: api/Hotels/?PageSize=5&PageNumber=1
+        [HttpGet]
+        public async Task<ActionResult<PagedResult<HotelDto>>> GetPagedHotels([FromQuery] QueryParameters queryParameters)
+        {
+            return Ok(await _hotelsRepository.GetAllAsync<HotelDto>(queryParameters));
+        }
+
         // GET: api/Hotels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<HotelDto>> GetHotel(int id)
         {
-            var hotel = await _hotelsRepository.GetAsync(id);
+            var result = await _hotelsRepository.GetAsync<HotelDto>(id);
 
-            if (hotel == null)
+            if (result == null)
             {
                 throw new NotFoundException(nameof(GetHotel), id);
             }
 
-            return Ok(_mapper.Map<HotelDto>(hotel));
+            return Ok(result);
         }
 
         // PUT: api/Hotels/5
