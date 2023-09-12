@@ -19,10 +19,8 @@ namespace HotelListing.API.Repositories
             return entity;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(T entity)
         {
-            var entity = await GetAsync(id);
-            // TODO null check?
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }

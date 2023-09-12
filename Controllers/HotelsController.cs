@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListing.API.Contracts;
 using HotelListing.API.Data;
+using HotelListing.API.Exceptions;
 using HotelListing.API.Models.Hotel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,7 @@ namespace HotelListing.API.Controllers
 
             if (hotel == null)
             {
-                return NotFound();
+                throw new NotFoundException(nameof(GetHotel), id);
             }
 
             return Ok(_mapper.Map<HotelDto>(hotel));
@@ -51,12 +52,14 @@ namespace HotelListing.API.Controllers
         {
             if (id != hotelDto.Id)
             {
-                return BadRequest("Invalid Item Id");
+                throw new BadRequestException(nameof(PutHotel), id);
             }
+
             var hotel = await _hotelsRepository.GetAsync(id);
+
             if (hotel == null)
             {
-                return NotFound();
+                throw new NotFoundException(nameof(PutHotel), id);
             }
 
             try
@@ -67,7 +70,7 @@ namespace HotelListing.API.Controllers
             {
                 if (!await HotelExistsAsync(id))
                 {
-                    return NotFound();
+                    throw new NotFoundException(nameof(PutHotel), id);
                 }
                 else
                 {
@@ -94,7 +97,15 @@ namespace HotelListing.API.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
-            await _hotelsRepository.DeleteAsync(id);
+            var hotel = await _hotelsRepository.GetAsync(id);
+
+            if (hotel == null)
+            {
+                throw new NotFoundException(nameof(DeleteHotel), id);
+            }
+
+            await _hotelsRepository.DeleteAsync(hotel);
+
             return NoContent();
         }
 

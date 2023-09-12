@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListing.API.Contracts;
 using HotelListing.API.Data;
+using HotelListing.API.Exceptions;
 using HotelListing.API.Models.Country;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,8 +40,7 @@ namespace HotelListing.API.Controllers
 
             if (country == null)
             {
-                _logger.LogWarning($"Record not found in {nameof(GetCountry)} with Id: {id}");
-                return NotFound();
+                throw new NotFoundException(nameof(GetCountry), id);
             }
 
             return Ok(_mapper.Map<CountryDto>(country));
@@ -54,15 +54,14 @@ namespace HotelListing.API.Controllers
         {
             if (id != updateCountryDto.Id)
             {
-                return BadRequest("Invalid Record Id");
+                throw new BadRequestException(nameof(PutCountry), id);
             }
 
             var country = await _countries.GetAsync(id);
 
             if (country == null)
             {
-                _logger.LogWarning($"Record not found in {nameof(PutCountry)} with Id: {id}");
-                return NotFound();
+                throw new NotFoundException(nameof(PutCountry), id);
             }
 
             _mapper.Map(updateCountryDto, country);
@@ -95,8 +94,9 @@ namespace HotelListing.API.Controllers
             var country = _mapper.Map<Country>(createCountryDto);
 
             await _countries.AddAsync(country);
+
             // TODO check for return type. No visible differences. CountryDetailDto then?
-            return CreatedAtAction("GetCountry", new { id = country.Id }, country);
+            return CreatedAtAction("GetCountry", new { id = country.Id }, _mapper.Map<CountryDto>(country));
         }
 
         // DELETE: api/Countries/5
@@ -104,7 +104,15 @@ namespace HotelListing.API.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteCountry(int id)
         {
-            await _countries.DeleteAsync(id);
+            var country = await _countries.GetAsync(id);
+
+            if (country == null)
+            {
+                throw new NotFoundException(nameof(DeleteCountry), id);
+            }
+
+            await _countries.DeleteAsync(country);
+
             return NoContent();
         }
     }

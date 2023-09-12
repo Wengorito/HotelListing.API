@@ -27,27 +27,18 @@ namespace HotelListing.API.Controllers
         {
             _logger.LogInformation($"Registration attempt for {apiUserDto.Email}");
 
-            try
-            {
-                var errors = await _authManager.RegisterUser(apiUserDto);
+            var errors = await _authManager.RegisterUser(apiUserDto);
 
-                if (errors.Any())
+            if (errors.Any())
+            {
+                foreach (var error in errors)
                 {
-                    foreach (var error in errors)
-                    {
-                        ModelState.AddModelError(error.Code, error.Description);
-                    }
-                    return BadRequest(ModelState);
+                    ModelState.AddModelError(error.Code, error.Description);
                 }
-
-                return Ok();
-
+                return BadRequest(ModelState);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something went wrong in the {nameof(Register)}");
-                return Problem($"Something went wrong in the {nameof(Register)}. Please contact support.", statusCode: 500);
-            }
+
+            return Ok();
         }
 
         [HttpPost]
@@ -81,22 +72,14 @@ namespace HotelListing.API.Controllers
         {
             _logger.LogInformation($"Login attempt for {loginDto.Email}");
 
-            try
-            {
-                var authResponse = await _authManager.Login(loginDto);
+            var authResponse = await _authManager.Login(loginDto);
 
-                if (authResponse is null)
-                {
-                    return Unauthorized();
-                }
-
-                return Ok(authResponse);
-            }
-            catch (Exception ex)
+            if (authResponse is null)
             {
-                _logger.LogError(ex, $"Something went wrong in {nameof(Login)}");
-                return Problem($"Something went wrong in the {nameof(Login)}. Please contact support.", statusCode: 500);
+                return Unauthorized();
             }
+
+            return Ok(authResponse);
         }
 
         [HttpPost]
