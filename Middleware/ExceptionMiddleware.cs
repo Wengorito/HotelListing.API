@@ -6,12 +6,12 @@ namespace HotelListing.API.Middleware
 {
     public class ExceptionMiddleware
     {
-        private readonly RequestDelegate _requestDelegate;
+        private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
 
-        public ExceptionMiddleware(RequestDelegate requestDelegate, ILogger<ExceptionMiddleware> logger)
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
-            _requestDelegate = requestDelegate;
+            _next = next;
             _logger = logger;
         }
 
@@ -19,7 +19,7 @@ namespace HotelListing.API.Middleware
         {
             try
             {
-                await _requestDelegate(context);
+                await _next(context);
             }
             catch (Exception ex)
             {
