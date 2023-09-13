@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.API", "HotelListing.API.csproj", "{EAA9BD2C-C8D7-44D9-BECE-D077BDF25CB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelListing.API", "HotelListing.API.csproj", "{EAA9BD2C-C8D7-44D9-BECE-D077BDF25CB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.API.Data", "..\HotelListing.API.Data\HotelListing.API.Data.csproj", "{7D4FF964-0B66-4E23-9DE1-522D78886C76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.API.Core", "..\HotelListing.API.Core\HotelListing.API.Core.csproj", "{B37CECFC-5214-410C-80D4-E1914697BBD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{EAA9BD2C-C8D7-44D9-BECE-D077BDF25CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAA9BD2C-C8D7-44D9-BECE-D077BDF25CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAA9BD2C-C8D7-44D9-BECE-D077BDF25CB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D4FF964-0B66-4E23-9DE1-522D78886C76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D4FF964-0B66-4E23-9DE1-522D78886C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D4FF964-0B66-4E23-9DE1-522D78886C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D4FF964-0B66-4E23-9DE1-522D78886C76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B37CECFC-5214-410C-80D4-E1914697BBD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B37CECFC-5214-410C-80D4-E1914697BBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B37CECFC-5214-410C-80D4-E1914697BBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B37CECFC-5214-410C-80D4-E1914697BBD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
