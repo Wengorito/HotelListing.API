@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using HotelListing.API.Contracts;
-using HotelListing.API.Data;
 using HotelListing.API.Exceptions;
 using HotelListing.API.Models.Country;
 using Microsoft.AspNetCore.Authorization;
@@ -31,8 +30,8 @@ namespace HotelListing.API.Controllers
         [EnableQuery]
         public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
         {
-            var countries = await _countries.GetAllAsync();
-            return Ok(_mapper.Map<List<GetCountryDto>>(countries));
+            var countries = await _countries.GetAllAsync<GetCountryDto>();
+            return Ok(countries);
         }
 
         // GET: api/Countries/5
@@ -40,13 +39,7 @@ namespace HotelListing.API.Controllers
         public async Task<ActionResult<CountryDto>> GetCountry(int id)
         {
             var country = await _countries.GetDetailsAsync(id);
-
-            if (country == null)
-            {
-                throw new NotFoundException(nameof(GetCountry), id);
-            }
-
-            return Ok(_mapper.Map<CountryDto>(country));
+            return Ok(country);
         }
 
         // PUT: api/Countries/5
@@ -55,23 +48,15 @@ namespace HotelListing.API.Controllers
         [Authorize]
         public async Task<IActionResult> PutCountry(int id, UpdateCountryDto updateCountryDto)
         {
+            // to też można przenieść do repozytorium, zależnie od przyjętej konwencji
             if (id != updateCountryDto.Id)
             {
                 throw new BadRequestException(nameof(PutCountry), id);
             }
 
-            var country = await _countries.GetAsync(id);
-
-            if (country == null)
-            {
-                throw new NotFoundException(nameof(PutCountry), id);
-            }
-
-            _mapper.Map(updateCountryDto, country);
-
             try
             {
-                await _countries.UpdateAsync(country);
+                await _countries.UpdateAsync<UpdateCountryDto>(id, updateCountryDto);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -94,12 +79,10 @@ namespace HotelListing.API.Controllers
         [Authorize]
         public async Task<ActionResult<CountryDto>> PostCountry(CreateCountryDto createCountryDto)
         {
-            var country = _mapper.Map<Country>(createCountryDto);
-
-            await _countries.AddAsync(country);
+            var country = await _countries.AddAsync<CreateCountryDto, CountryDto>(createCountryDto);
 
             // TODO check for return type. No visible differences. CountryDetailDto then?
-            return CreatedAtAction("GetCountry", new { id = country.Id }, _mapper.Map<CountryDto>(country));
+            return CreatedAtAction(nameof(PostCountry), new { id = country.Id }, country);
         }
 
         // DELETE: api/Countries/5
@@ -107,14 +90,7 @@ namespace HotelListing.API.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteCountry(int id)
         {
-            var country = await _countries.GetAsync(id);
-
-            if (country == null)
-            {
-                throw new NotFoundException(nameof(DeleteCountry), id);
-            }
-
-            await _countries.DeleteAsync(country);
+            await _countries.DeleteAsync(id);
 
             return NoContent();
         }

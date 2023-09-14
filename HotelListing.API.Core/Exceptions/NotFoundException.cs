@@ -2,7 +2,8 @@
 {
     public class NotFoundException : ApplicationException
     {
-        public NotFoundException(string name, object key) : base($"{name} ({key}) was not found")
+        // TODO teraz zmienić na 
+        public NotFoundException(string name, object key) : base($"{name} with id ({key}) was not found")
         {
 
         }
